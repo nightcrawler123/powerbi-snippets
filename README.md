@@ -11,6 +11,24 @@ VAR LastDay = CALCULATE(MAX('Table'[Date]), FILTER(RankTable, [Rank] = 1))
 RETURN
 FORMAT(LastDay, "mmm dd")
 
+the above codes gives error token eof error.
+
+corrected version 
+Last Day = 
+VAR RankTable = ADDCOLUMNS('Table', "Rank", RANKX(ALL('Table'[Date]), 'Table'[Date], , DESC, Dense))
+VAR LastDay = CALCULATE(MAXX(FILTER(RankTable, [Rank] = 1), 'Table'[Date]))
+RETURN
+FORMAT(LastDay, "mmm dd")
+
+
+Here's what changed:
+
+In the RANKX function, I've added the Dense argument at the end. This ensures the rank values are assigned correctly.
+
+The CALCULATE function in your LastDay variable wasn't quite right. CALCULATE is not needed here. Instead, you can use MAXX to find the maximum date where the rank equals 1.
+
+Remember to replace 'Table' with the actual name of your table in Power BI.
+
 
 
 Snippet 2
